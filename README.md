@@ -88,7 +88,7 @@ User → Frontend (Dashboard)
 👉 
 
 📂 Installation
-git clone https://github.com/your-username/ai-career-copilot.git
+git clone https://github.com/Dhamodharan27it/ai-career-copilot.git
 cd ai-career-copilot
 
 Create virtual environment
