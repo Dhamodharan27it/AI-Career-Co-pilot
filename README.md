@@ -87,3 +87,53 @@ User → Frontend (Dashboard)
 
 👉 
 
+📂 Installation
+git clone https://github.com/your-username/ai-career-copilot.git
+cd ai-career-copilot
+
+Create virtual environment
+python -m venv .venv
+
+Activate environment
+.venv\Scripts\activate
+
+Install dependencies
+pip install -r requirements.txt
+
+Run the app
+python app.py
+
+🔑 Environment Variables
+
+Create a .env file:
+
+AUTH0_CLIENT_ID=your_client_id
+AUTH0_CLIENT_SECRET=your_secret
+AUTH0_DOMAIN=your_domain
+AUTH0_CALLBACK_URL=http://localhost:5000/callback
+OPENAI_API_KEY=your_api_key
+
+📈 Future Improvements
+📊 More advanced AI analysis
+🧠 Resume improvement suggestions
+🌐 Job recommendations
+📱 Mobile-friendly version
+🔗 LinkedIn integration
+👨‍💻 Author
+
+Dhamodharan A
+B.Tech IT Student
+Hackathon Builder 🚀
+
+🏆 Goal
+
+Build something that helps students grow their careers using AI
+
+⭐ Support
+
+If you like this project:
+
+⭐ Star the repo
+🍴 Fork it
+💬 Share feedback
+
