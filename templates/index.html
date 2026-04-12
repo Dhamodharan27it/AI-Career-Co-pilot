@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dauthverse.ai</title>
+  <title>AI Career Copilot</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +29,6 @@
       overflow-x: hidden;
     }
 
-    /* ── NOISE OVERLAY ── */
     body::after {
       content:'';
       position:fixed; inset:0;
@@ -36,7 +36,6 @@
       pointer-events:none; z-index:999; opacity:.5;
     }
 
-    /* ── ANIMATED GRID ── */
     .grid-bg {
       position:fixed; inset:0;
       background-image:
@@ -51,7 +50,6 @@
       100% { background-position: 70px 70px; }
     }
 
-    /* ── RADIAL GLOW ── */
     .glow-orb {
       position:fixed;
       width:700px; height:700px;
@@ -67,7 +65,6 @@
       50%      { transform:translate(-50%,-50%) scale(1.1); opacity:1;  }
     }
 
-    /* ── FLOATING PARTICLES ── */
     .particles { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
     .particle {
       position:absolute;
@@ -84,7 +81,6 @@
       100% { transform:translateY(-10vh) translateX(40px); opacity:0; }
     }
 
-    /* ── NAV ── */
     nav {
       position:fixed; top:0; left:0; right:0; z-index:100;
       display:flex; align-items:center; justify-content:space-between;
@@ -101,12 +97,17 @@
     .nav-logo {
       display:flex; align-items:center; gap:10px;
       font-weight:800; font-size:17px; letter-spacing:.02em;
+      text-decoration: none; color: var(--white);
     }
     .nav-logo-icon {
       width:36px; height:36px; border-radius:9px;
       background:linear-gradient(135deg,var(--green),#00b35a);
       display:flex; align-items:center; justify-content:center;
-      font-size:18px;
+      overflow: hidden;
+    }
+    .nav-logo-icon img {
+      width: 28px; height: 28px;
+      object-fit: contain; border-radius: 6px;
     }
     .nav-badge {
       font-family:'Space Mono',monospace;
@@ -130,7 +131,6 @@
       border-color:var(--green);
     }
 
-    /* ── HERO ── */
     .hero {
       min-height:100vh;
       display:flex; flex-direction:column;
@@ -195,7 +195,6 @@
       to   { opacity:1; transform:translateY(0); }
     }
 
-    /* ── CTA BUTTONS ── */
     .cta-group {
       display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center;
       margin-bottom:72px;
@@ -241,7 +240,6 @@
       background:rgba(0,255,127,.04);
     }
 
-    /* ── STATS STRIP ── */
     .stats-strip {
       display:flex; gap:0; justify-content:center;
       margin-bottom:100px;
@@ -269,7 +267,6 @@
       text-transform:uppercase;
     }
 
-    /* ── FEATURES ── */
     .section {
       padding:80px 24px;
       max-width:1100px;
@@ -329,7 +326,6 @@
     .feat-title { font-size:17px; font-weight:700; margin-bottom:8px; }
     .feat-desc  { font-size:13px; color:var(--muted); line-height:1.7; }
 
-    /* ── HOW IT WORKS ── */
     .steps {
       display:grid; grid-template-columns:repeat(4,1fr);
       gap:0; position:relative;
@@ -356,7 +352,6 @@
     .step-title { font-size:15px; font-weight:700; margin-bottom:6px; }
     .step-desc  { font-size:12px; color:var(--muted); line-height:1.6; font-family:'Space Mono',monospace; }
 
-    /* ── CTA BANNER ── */
     .cta-banner {
       margin:0 24px 100px;
       max-width:1100px;
@@ -383,25 +378,28 @@
     .cta-banner h2 { font-size:36px; font-weight:800; margin-bottom:12px; }
     .cta-banner p  { color:var(--muted); font-size:15px; margin-bottom:32px; }
 
-    /* ── FOOTER ── */
     footer {
       border-top:1px solid rgba(0,255,127,.07);
       padding:28px 60px;
       display:flex; align-items:center; justify-content:space-between;
       font-family:'Space Mono',monospace; font-size:11px; color:var(--muted);
     }
+    .footer-logo {
+      display:flex; align-items:center; gap:8px;
+    }
+    .footer-logo img {
+      width:20px; height:20px; object-fit:contain; border-radius:4px;
+    }
     .footer-status {
       display:flex; align-items:center; gap:6px; color:var(--green);
     }
 
-    /* ── SCROLL REVEAL ── */
     .reveal {
       opacity:0; transform:translateY(30px);
       transition: opacity .7s ease, transform .7s ease;
     }
     .reveal.visible { opacity:1; transform:translateY(0); }
 
-    /* ── RESPONSIVE ── */
     @media(max-width:900px) {
       .features-grid { grid-template-columns:repeat(2,1fr); }
       .steps { grid-template-columns:repeat(2,1fr); gap:32px; }
@@ -420,17 +418,18 @@
 </head>
 <body>
 
-<!-- BG LAYERS -->
 <div class="grid-bg"></div>
 <div class="glow-orb"></div>
 <div class="particles" id="particles"></div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <div class="nav-logo-icon">🚀</div>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Career Copilot Logo"/>
+    </div>
     Career Copilot
-  </div>
+  </a>
   <div class="nav-badge">AI-POWERED</div>
   <a href="/login" class="nav-login">Login →</a>
 </nav>
@@ -453,15 +452,10 @@
   </p>
 
   <div class="cta-group">
-    <a href="/login" class="btn-main">
-      ⚡ Get Started Free
-    </a>
-    <a href="#how" class="btn-ghost">
-      See How It Works ↓
-    </a>
+    <a href="/login" class="btn-main">⚡ Get Started Free</a>
+    <a href="#how" class="btn-ghost">See How It Works ↓</a>
   </div>
 
-  <!-- Stats -->
   <div class="stats-strip">
     <div class="stat-item">
       <div class="stat-num">10k+</div>
@@ -472,7 +466,7 @@
       <div class="stat-lbl">Accuracy Rate</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">GPT-4</div>
+      <div class="stat-num">LLaMA</div>
       <div class="stat-lbl">AI Powered</div>
     </div>
     <div class="stat-item">
@@ -502,7 +496,7 @@
     <div class="feat-card">
       <div class="feat-icon">✦</div>
       <div class="feat-title">AI Career Mentor</div>
-      <div class="feat-desc">Chat with a GPT-4 powered mentor that knows your skills and gives personalised, actionable career advice in real time.</div>
+      <div class="feat-desc">Chat with an AI mentor that knows your skills and gives personalised, actionable career advice in real time.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🎯</div>
@@ -561,7 +555,10 @@
 
 <!-- FOOTER -->
 <footer>
-  <div>© 2025 AI Career Copilot · Built for Auth0 Hackathon</div>
+  <div class="footer-logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"/>
+    © 2025 AI Career Copilot · Built for Auth0 Hackathon
+  </div>
   <div class="footer-status">
     <div class="tag-dot"></div>
     All systems operational
@@ -570,7 +567,6 @@
 </footer>
 
 <script>
-  /* ── PARTICLES ── */
   const container = document.getElementById('particles');
   for (let i = 0; i < 30; i++) {
     const p = document.createElement('div');
@@ -583,25 +579,11 @@
     container.appendChild(p);
   }
 
-  /* ── SCROLL REVEAL ── */
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  /* ── COUNTER ANIMATION ── */
-  function animateCounter(el, target, suffix='') {
-    let start = 0;
-    const step = () => {
-      start += Math.ceil(target / 40);
-      if (start >= target) { el.textContent = target + suffix; return; }
-      el.textContent = start + suffix;
-      requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-
-  /* ── SMOOTH SCROLL ── */
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();

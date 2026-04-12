@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Career Copilot — Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +32,6 @@
       overflow-x: hidden;
     }
 
-    /* NOISE */
     body::after {
       content: '';
       position: fixed; inset: 0;
@@ -39,7 +39,6 @@
       pointer-events: none; z-index: 999; opacity: .5;
     }
 
-    /* GRID BG */
     .grid-bg {
       position: fixed; inset: 0;
       background-image:
@@ -68,9 +67,7 @@
       0%,100% { opacity: .6; transform: translate(-50%,-50%) scale(1); }
       50%      { opacity: 1;  transform: translate(-50%,-50%) scale(1.1); }
     }
-    /* logo */
 
-    /* PARTICLES */
     .particles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
     .particle {
       position: absolute; width: 2px; height: 2px;
@@ -84,7 +81,6 @@
       100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
     }
 
-    /* LAYOUT */
     .shell {
       display: grid;
       grid-template-columns: 260px 1fr;
@@ -92,7 +88,6 @@
       position: relative; z-index: 1;
     }
 
-    /* SIDEBAR */
     .sidebar {
       background: rgba(8,15,11,0.92);
       border-right: 1px solid var(--border);
@@ -116,12 +111,15 @@
       width: 38px; height: 38px; border-radius: 10px;
       background: linear-gradient(135deg, var(--green), #00b35a);
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .logo-icon img {
+      width: 28px; height: 28px;
+      object-fit: contain; border-radius: 6px;
     }
     .logo-text { font-size: 15px; font-weight: 800; color: var(--white); line-height: 1.2; }
     .logo-sub  { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--green); letter-spacing: .15em; }
 
-    /* USER CARD */
     .user-card {
       background: linear-gradient(135deg, rgba(0,255,127,.07), rgba(0,200,90,.04));
       border: 1px solid var(--border2);
@@ -139,7 +137,6 @@
     .u-name  { font-weight: 700; font-size: 13px; }
     .u-email { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted2); margin-top: 2px; word-break: break-all; }
 
-    /* NAV */
     .nav-label {
       font-family: 'Space Mono', monospace;
       font-size: 9px; letter-spacing: .18em;
@@ -183,7 +180,6 @@
       50%      { opacity: .3; transform: scale(.6); }
     }
 
-    /* MAIN */
     .main {
       padding: 32px 36px;
       display: flex; flex-direction: column; gap: 24px;
@@ -194,7 +190,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* TOPBAR */
     .topbar { display: flex; align-items: center; justify-content: space-between; }
     .page-title { font-size: 26px; font-weight: 800; line-height: 1.1; }
     .page-title span { color: var(--green); }
@@ -207,7 +202,6 @@
       font-family: 'Space Mono', monospace; font-size: 10px; color: var(--green);
     }
 
-    /* SCORE BANNER */
     .score-banner {
       background: linear-gradient(120deg, var(--card) 30%, rgba(0,255,127,.05) 100%);
       border: 1px solid var(--border2);
@@ -244,7 +238,6 @@
     .score-num { position: relative; z-index: 1; font-size: 26px; font-weight: 800; color: var(--green); font-family: 'Space Mono', monospace; }
     .score-lbl { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted2); letter-spacing: .1em; text-transform: uppercase; }
 
-    /* STAT CARDS */
     .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
     .stat-card {
       background: var(--card);
@@ -272,10 +265,8 @@
     .stat-val  { font-size: 28px; font-weight: 800; line-height: 1; color: var(--white); }
     .stat-hint { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--green); margin-top: 4px; }
 
-    /* MAIN GRID */
     .main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 18px; }
 
-    /* PANEL */
     .panel {
       background: var(--card);
       border: 1px solid var(--border);
@@ -291,7 +282,6 @@
     .panel-title { font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     .panel-body  { padding: 18px 22px; }
 
-    /* PILL */
     .pill {
       font-family: 'Space Mono', monospace; font-size: 9px;
       color: var(--green);
@@ -300,7 +290,6 @@
       border-radius: 20px; padding: 3px 10px; letter-spacing: .08em;
     }
 
-    /* SKILL CHIPS */
     .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .skill-chip {
       display: flex; align-items: center; gap: 6px;
@@ -319,7 +308,6 @@
     .skill-chip.both   { background: rgba(170,255,68,.07); border-color: rgba(170,255,68,.25); color: #aaff44; }
     .empty-state { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
 
-    /* LANG BARS */
     .lang-list { display: flex; flex-direction: column; gap: 12px; }
     .lang-row  { display: flex; flex-direction: column; gap: 5px; }
     .lang-meta { display: flex; justify-content: space-between; font-size: 12px; }
@@ -332,7 +320,6 @@
       transition: width 1.2s cubic-bezier(.22,1,.36,1);
     }
 
-    /* SUGGESTIONS */
     .suggest-list { display: flex; flex-direction: column; gap: 9px; }
     .suggest-item {
       display: flex; align-items: flex-start; gap: 11px;
@@ -351,7 +338,6 @@
       font-size: 13px;
     }
 
-    /* CAREER */
     .career-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: linear-gradient(135deg, rgba(0,255,127,.1), rgba(0,200,90,.05));
@@ -362,7 +348,6 @@
     }
     .career-desc { font-size: 12px; color: var(--muted2); line-height: 1.7; font-family: 'Space Mono', monospace; }
 
-    /* PROJECTS */
     .project-list { display: flex; flex-direction: column; gap: 8px; }
     .project-item {
       display: flex; align-items: center; justify-content: space-between;
@@ -380,7 +365,6 @@
       border: 1px solid rgba(0,255,127,.15);
     }
 
-    /* UPLOAD */
     .upload-box {
       border: 2px dashed rgba(0,255,127,.2);
       border-radius: 14px; padding: 30px 20px;
@@ -408,7 +392,6 @@
     }
     .btn-green:hover { opacity: .88; transform: translateY(-1px); }
 
-    /* GITHUB INPUT */
     .gh-row { display: flex; gap: 10px; margin-bottom: 18px; }
     .gh-input {
       flex: 1; background: var(--surface);
@@ -421,7 +404,6 @@
     .gh-input:focus { border-color: rgba(0,255,127,.4); }
     .gh-input::placeholder { color: var(--muted); }
 
-    /* CHAT */
     .chat-wrap { display: flex; flex-direction: column; height: 440px; }
     .chat-messages {
       flex: 1; overflow-y: auto; padding: 12px 0;
@@ -458,7 +440,6 @@
     }
     .btn-send:hover { opacity: .85; transform: translateY(-1px); }
 
-    /* TYPING */
     .typing { display: flex; gap: 4px; padding: 4px 0; }
     .typing span {
       width: 5px; height: 5px; border-radius: 50%;
@@ -472,7 +453,6 @@
       40%      { transform: translateY(-6px); }
     }
 
-    /* TOAST */
     #toast {
       position: fixed; bottom: 24px; right: 24px;
       background: var(--card);
@@ -488,12 +468,10 @@
     }
     #toast.show { opacity: 1; transform: translateY(0); }
 
-    /* SCROLLBAR */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    /* RESPONSIVE */
     @media(max-width:1100px) {
       .stats-row  { grid-template-columns: repeat(2,1fr); }
       .main-grid  { grid-template-columns: 1fr; }
@@ -515,17 +493,18 @@
 
 <div class="shell">
 
-  <!-- ══ SIDEBAR ══ -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <a href="/" class="logo">
-      <div class="logo-icon"><logo class=".logo.png"></logo></div>
+      <div class="logo-icon">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Career Copilot Logo"/>
+      </div>
       <div>
         <div class="logo-text">Career Copilot</div>
         <div class="logo-sub">AI-POWERED</div>
       </div>
     </a>
 
-    <!-- Jinja2 user card — populated by Flask session -->
     <div class="user-card">
       <div class="avatar" id="avatarEl">
         {{ (user.name or user.email or 'U')[0] | upper }}
@@ -567,10 +546,9 @@
     </div>
   </aside>
 
-  <!-- ══ MAIN ══ -->
+  <!-- MAIN -->
   <main class="main">
 
-    <!-- Topbar -->
     <div class="topbar">
       <div>
         <div class="page-title" id="pageTitle">Dashboard <span>Overview</span></div>
@@ -581,10 +559,8 @@
       </div>
     </div>
 
-    <!-- ══ TAB: OVERVIEW ══ -->
+    <!-- TAB: OVERVIEW -->
     <div id="tab-overview">
-
-      <!-- Score Banner -->
       <div class="score-banner" style="margin-bottom:22px;">
         <div>
           <div class="sb-tag">CAREER READINESS</div>
@@ -602,7 +578,6 @@
         </div>
       </div>
 
-      <!-- Stats Row -->
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-icon">📦</div>
@@ -630,13 +605,8 @@
         </div>
       </div>
 
-      <!-- Main Grid -->
       <div class="main-grid" style="margin-top:18px;">
-
-        <!-- LEFT -->
         <div style="display:flex;flex-direction:column;gap:16px;">
-
-          <!-- Skill Map -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">✦ Skill Map</div>
@@ -652,7 +622,6 @@
             </div>
           </div>
 
-          <!-- Action Plan -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">🎯 Action Plan</div>
@@ -668,7 +637,6 @@
             </div>
           </div>
 
-          <!-- Projects -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">📂 GitHub Projects</div>
@@ -680,13 +648,9 @@
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- RIGHT -->
         <div style="display:flex;flex-direction:column;gap:16px;">
-
-          <!-- Language Bars -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">🐙 Languages</div>
@@ -698,7 +662,6 @@
             </div>
           </div>
 
-          <!-- Career Match -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-title">🏅 Career Match</div>
@@ -708,12 +671,11 @@
               <div class="career-desc" id="careerDesc">Upload your resume &amp; connect GitHub to reveal your ideal career path.</div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- ══ TAB: RESUME ══ -->
+    <!-- TAB: RESUME -->
     <div id="tab-resume" style="display:none;">
       <div class="panel">
         <div class="panel-head">
@@ -736,7 +698,7 @@
       </div>
     </div>
 
-    <!-- ══ TAB: GITHUB ══ -->
+    <!-- TAB: GITHUB -->
     <div id="tab-github" style="display:none;">
       <div class="panel">
         <div class="panel-head">
@@ -760,12 +722,12 @@
       </div>
     </div>
 
-    <!-- ══ TAB: AI MENTOR ══ -->
+    <!-- TAB: AI MENTOR -->
     <div id="tab-ai" style="display:none;">
       <div class="panel">
         <div class="panel-head">
           <div class="panel-title">✦ AI Career Mentor</div>
-          <div class="badge-live"><span class="status-dot"></span>GPT-4o-mini</div>
+          <div class="badge-live"><span class="status-dot"></span>LLaMA 3.1</div>
         </div>
         <div class="panel-body">
           <div class="chat-wrap">
@@ -794,33 +756,23 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
 <div id="toast">✦ <span id="toastTxt"></span></div>
 
 <script>
-  /* ── STATE ── */
   const S = {
-    resumeSkills: [],
-    githubSkills: [],
-    languages:    {},
-    repos:        0,
-    score:        0,
-    level:        '',
-    career:       '',
-    suggestions:  [],
-    projects:     []
+    resumeSkills: [], githubSkills: [], languages: {},
+    repos: 0, score: 0, level: '', career: '', suggestions: [], projects: []
   };
 
-  /* ── PARTICLES ── */
   const pc = document.getElementById('particles');
   for (let i = 0; i < 25; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    p.style.left              = Math.random() * 100 + 'vw';
+    p.style.left = Math.random() * 100 + 'vw';
     p.style.animationDuration = (9 + Math.random() * 14) + 's';
-    p.style.animationDelay    = (Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
     const sz = (1 + Math.random() * 2) + 'px';
     p.style.width = p.style.height = sz;
     pc.appendChild(p);
   }
 
-  /* ── TOAST ── */
   function toast(msg, dur = 3200) {
     document.getElementById('toastTxt').textContent = msg;
     const t = document.getElementById('toast');
@@ -829,13 +781,12 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
     t._timer = setTimeout(() => t.classList.remove('show'), dur);
   }
 
-  /* ── TAB SWITCHING ── */
-  const TABS   = ['overview','resume','github','ai'];
+  const TABS = ['overview','resume','github','ai'];
   const TITLES = {
-    overview: ['Dashboard <span>Overview</span>',  'Welcome back — your career intel is ready'],
-    resume:   ['Resume <span>Analyser</span>',      'Upload your PDF to extract skills automatically'],
-    github:   ['GitHub <span>Analyser</span>',      'Deep analysis of your repositories & languages'],
-    ai:       ['AI Career <span>Mentor</span>',     'Chat with Mentor about your career']
+    overview: ['Dashboard <span>Overview</span>', 'Welcome back — your career intel is ready'],
+    resume:   ['Resume <span>Analyser</span>',    'Upload your PDF to extract skills automatically'],
+    github:   ['GitHub <span>Analyser</span>',    'Deep analysis of your repositories & languages'],
+    ai:       ['AI Career <span>Mentor</span>',   'Chat with Mentor about your career']
   };
 
   function switchTab(id, el) {
@@ -848,15 +799,12 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
     document.getElementById('pageSub').textContent  = TITLES[id][1];
   }
 
-  /* ── RESUME UPLOAD → POST /upload ── */
   async function uploadResume(e) {
     const file = e.target.files[0];
     if (!file) return;
     toast('Uploading & analysing resume…');
-
     const fd = new FormData();
     fd.append('resume', file);
-
     try {
       const res  = await fetch('/upload', { method: 'POST', body: fd });
       const data = await res.json();
@@ -873,28 +821,23 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
   }
 
   function renderResumeResult() {
-    const grid = document.getElementById('resumeSkillsGrid');
-    grid.innerHTML = S.resumeSkills.map(s =>
-      `<div class="skill-chip resume">📄 ${s}</div>`
-    ).join('');
+    document.getElementById('resumeSkillsGrid').innerHTML =
+      S.resumeSkills.map(s => `<div class="skill-chip resume">📄 ${s}</div>`).join('');
     document.getElementById('resumeResult').style.display = 'block';
   }
 
-  /* ── GITHUB ANALYSIS → POST /github-analysis ── */
   async function analyseGitHub() {
     const username = document.getElementById('ghInput').value.trim();
     if (!username) { toast('Enter a GitHub username first.'); return; }
     toast('Fetching GitHub data for @' + username + '…');
-
     try {
       const res  = await fetch('/github-analysis', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ username })
+        body: JSON.stringify({ username })
       });
       const data = await res.json();
       if (data.error) { toast('❌ ' + data.error); return; }
-
       S.githubSkills = data.combined_skills || [];
       S.languages    = data.languages       || {};
       S.repos        = data.repo_count      || 0;
@@ -903,23 +846,19 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
       S.career       = data.career          || '';
       S.suggestions  = data.suggestions     || [];
       S.projects     = data.projects        || [];
-
       renderGithubTab(data);
       updateOverview();
       toast('✅ GitHub analysed — ' + S.repos + ' repos found!');
     } catch {
-      // demo fallback
-      S.languages   = { Python: 6, JavaScript: 4, HTML: 2, CSS: 1 };
-      S.repos       = 9;  S.score  = 70;
-      S.career      = 'AI/ML Engineer';
-      S.level       = 'Strong Profile';
+      S.languages  = { Python: 6, JavaScript: 4, HTML: 2, CSS: 1 };
+      S.repos = 9; S.score = 70;
+      S.career = 'AI/ML Engineer'; S.level = 'Strong Profile';
       S.suggestions = ['Write README files for every repo', 'Add TypeScript to your stack', 'Deploy at least one project live'];
-      S.githubSkills= ['Python','JavaScript','Html','Css'];
-      S.projects    = [
-        { name: 'ml-classifier',   language: 'Python' },
-        { name: 'portfolio-site',  language: 'JavaScript' },
-        { name: 'flask-restapi',   language: 'Python' },
-        { name: 'data-visualizer', language: 'Python' }
+      S.githubSkills = ['Python','JavaScript','Html','Css'];
+      S.projects = [
+        { name: 'ml-classifier', language: 'Python' },
+        { name: 'portfolio-site', language: 'JavaScript' },
+        { name: 'flask-restapi', language: 'Python' }
       ];
       renderGithubTab({ languages: S.languages, career: S.career, projects: S.projects });
       updateOverview();
@@ -930,63 +869,40 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
   const LANG_COLORS = ['var(--green)','#00e5ff','#aaff44','#44ffcc','#00b3ff','#ffdd44'];
 
   function renderGithubTab(data) {
-    document.getElementById('ghResult').style.display  = 'block';
+    document.getElementById('ghResult').style.display = 'block';
     document.getElementById('ghCareerBadge').textContent = '✦ ' + (data.career || S.career);
-
     const langs = data.languages || S.languages;
     const total = Object.values(langs).reduce((a,b) => a+b, 0) || 1;
-
     document.getElementById('ghLangList').innerHTML =
       Object.entries(langs).map(([l,c],i) => {
         const pct = Math.round(c / total * 100);
         return `<div class="lang-row">
-          <div class="lang-meta">
-            <span class="lang-name">${l}</span>
-            <span class="lang-pct">${pct}%</span>
-          </div>
-          <div class="lang-bg">
-            <div class="lang-fill" style="width:${pct}%;background:${LANG_COLORS[i % LANG_COLORS.length]}"></div>
-          </div>
+          <div class="lang-meta"><span class="lang-name">${l}</span><span class="lang-pct">${pct}%</span></div>
+          <div class="lang-bg"><div class="lang-fill" style="width:${pct}%;background:${LANG_COLORS[i%LANG_COLORS.length]}"></div></div>
         </div>`;
       }).join('');
-
     const projs = data.projects || S.projects;
-    document.getElementById('ghProjectList').innerHTML =
-      projs.length
-        ? projs.map(p =>
-            `<div class="project-item">
-              <span class="proj-name">📂 ${p.name}</span>
-              ${p.language ? `<span class="proj-lang">${p.language}</span>` : ''}
-            </div>`
-          ).join('')
-        : '<div class="empty-state">No projects found.</div>';
+    document.getElementById('ghProjectList').innerHTML = projs.length
+      ? projs.map(p => `<div class="project-item"><span class="proj-name">📂 ${p.name}</span>${p.language ? `<span class="proj-lang">${p.language}</span>` : ''}</div>`).join('')
+      : '<div class="empty-state">No projects found.</div>';
   }
 
-  /* ── UPDATE OVERVIEW PANEL ── */
   function updateOverview() {
     const all = [...new Set([...S.resumeSkills, ...S.githubSkills])];
-
-    // Stat cards
     document.getElementById('statRepos').textContent    = S.repos || '—';
     document.getElementById('statResume').textContent   = S.resumeSkills.length || '—';
     document.getElementById('statCombined').textContent = all.length || '—';
     document.getElementById('statCareer').textContent   = S.career || '—';
-
-    // Score ring — animate by setting CSS custom property
     const ring = document.getElementById('scoreRing');
     ring.style.setProperty('--pct', S.score);
     document.getElementById('scoreNum').textContent = S.score;
-
-    // Profile level
     const lvlMap = {
-      'Strong Profile':  'Strong Profile 🔥',
+      'Strong Profile': 'Strong Profile 🔥',
       'Growing Profile': 'Growing Profile 📈',
-      'Beginner profile':'Beginner Profile 🌱'
+      'Beginner profile': 'Beginner Profile 🌱'
     };
     document.getElementById('profileLevel').textContent =
       lvlMap[S.level] || S.level || 'Add your data to see your level ✦';
-
-    // Skill map
     if (all.length) {
       document.getElementById('skillsGrid').innerHTML = all.map(s => {
         const inR = S.resumeSkills.map(x=>x.toLowerCase()).includes(s.toLowerCase());
@@ -996,102 +912,73 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
         return `<div class="skill-chip ${cls}">${ico} ${s}</div>`;
       }).join('');
     }
-
-    // Language bars
     if (Object.keys(S.languages).length) {
       const total = Object.values(S.languages).reduce((a,b) => a+b, 0) || 1;
       document.getElementById('langList').innerHTML =
         Object.entries(S.languages).map(([l,c],i) => {
           const pct = Math.round(c / total * 100);
           return `<div class="lang-row">
-            <div class="lang-meta">
-              <span class="lang-name">${l}</span>
-              <span class="lang-pct">${pct}%</span>
-            </div>
-            <div class="lang-bg">
-              <div class="lang-fill" style="width:${pct}%;background:${LANG_COLORS[i % LANG_COLORS.length]}"></div>
-            </div>
+            <div class="lang-meta"><span class="lang-name">${l}</span><span class="lang-pct">${pct}%</span></div>
+            <div class="lang-bg"><div class="lang-fill" style="width:${pct}%;background:${LANG_COLORS[i%LANG_COLORS.length]}"></div></div>
           </div>`;
         }).join('');
     }
-
-    // Projects
     if (S.projects.length) {
       document.getElementById('projectCountPill').textContent = S.projects.length + ' repos';
       document.getElementById('projectList').innerHTML =
-        S.projects.slice(0, 6).map(p =>
-          `<div class="project-item">
-            <span class="proj-name">📂 ${p.name}</span>
-            ${p.language ? `<span class="proj-lang">${p.language}</span>` : ''}
-          </div>`
+        S.projects.slice(0,6).map(p =>
+          `<div class="project-item"><span class="proj-name">📂 ${p.name}</span>${p.language ? `<span class="proj-lang">${p.language}</span>` : ''}</div>`
         ).join('');
     }
-
-    // Suggestions
     if (S.suggestions.length) {
       const icons = ['🚀','📚','💡','🔧','🌐'];
       document.getElementById('suggestionsList').innerHTML =
         S.suggestions.map((s,i) =>
-          `<div class="suggest-item">
-            <div class="suggest-icon">${icons[i % icons.length]}</div>
-            <div>${s}</div>
-          </div>`
+          `<div class="suggest-item"><div class="suggest-icon">${icons[i%icons.length]}</div><div>${s}</div></div>`
         ).join('');
     }
-
-    // Career badge + description
     if (S.career) {
       document.getElementById('careerBadge').textContent = '✦ ' + S.career;
       const descs = {
-        'AI/ML Engineer':
-          'Your Python skills align perfectly with AI/ML roles. Focus on TensorFlow, PyTorch, and Kaggle competitions to stand out.',
-        'Full Stack Developer':
-          'Solid frontend + backend blend. Master cloud deployment (AWS/Vercel) and system design to level up.',
-        'Backend Developer':
-          'Strong server-side skills! Add REST API design, PostgreSQL, and Docker to your stack.',
-        'General Developer':
-          'Build projects across domains to discover your specialisation. Keep shipping — any language works!'
+        'AI/ML Engineer': 'Your Python skills align perfectly with AI/ML roles. Focus on TensorFlow, PyTorch, and Kaggle competitions to stand out.',
+        'Full Stack Developer': 'Solid frontend + backend blend. Master cloud deployment (AWS/Vercel) and system design to level up.',
+        'Backend Developer': 'Strong server-side skills! Add REST API design, PostgreSQL, and Docker to your stack.',
+        'General Developer': 'Build projects across domains to discover your specialisation. Keep shipping — any language works!'
       };
       document.getElementById('careerDesc').textContent =
         descs[S.career] || 'Keep building and learning to define your career path.';
     }
   }
 
-  /* ── AI CHAT → POST /ai-chat ── */
   async function sendMsg() {
     const inp = document.getElementById('chatIn');
     const msg = inp.value.trim();
     if (!msg) return;
     inp.value = '';
-
     appendMsg(msg, 'user');
     const tid = appendTyping();
-
     try {
       const res  = await fetch('/ai-chat', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ message: msg })
+        body: JSON.stringify({ message: msg })
       });
       const data = await res.json();
       removeTyping(tid);
       appendMsg(data.reply || 'No response received.', 'bot');
     } catch {
       removeTyping(tid);
-      appendMsg(
-        "I'm your AI Career Copilot! 🚀\n\nConnect your backend to unlock live AI responses.\n\nTip: Upload your resume & link GitHub first for the most personalised advice.",
-        'bot'
-      );
+      appendMsg("I'm your AI Career Copilot! 🚀\n\nConnect your backend to unlock live AI responses.", 'bot');
     }
   }
 
   function appendMsg(text, who) {
     const box = document.getElementById('chatMsgs');
-    const d   = document.createElement('div');
+    const d = document.createElement('div');
     d.className = 'msg ' + who;
     const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
     d.innerHTML = `
-      <div class="msg-av ${who === 'bot' ? 'bot' : 'usr'}">${who === 'bot' ? '✦' : 'U'}</div>
+      <div class="msg-av ${who==='bot'?'bot':'usr'}">${who==='bot'?'✦':'U'}</div>
       <div class="msg-bbl">${safe}</div>`;
     box.appendChild(d);
     box.scrollTop = box.scrollHeight;
@@ -1099,12 +986,10 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
 
   function appendTyping() {
     const box = document.getElementById('chatMsgs');
-    const id  = 'ty_' + Date.now();
-    const d   = document.createElement('div');
+    const id = 'ty_' + Date.now();
+    const d = document.createElement('div');
     d.className = 'msg bot'; d.id = id;
-    d.innerHTML = `
-      <div class="msg-av bot">✦</div>
-      <div class="msg-bbl"><div class="typing"><span></span><span></span><span></span></div></div>`;
+    d.innerHTML = `<div class="msg-av bot">✦</div><div class="msg-bbl"><div class="typing"><span></span><span></span><span></span></div></div>`;
     box.appendChild(d);
     box.scrollTop = box.scrollHeight;
     return id;
@@ -1115,10 +1000,9 @@ Upload your resume &amp; connect GitHub, then ask me anything about your skills,
     if (el) el.remove();
   }
 
-  /* ── DRAG & DROP on upload box ── */
   const ub = document.getElementById('uploadBox');
   ub.addEventListener('dragover',  e => { e.preventDefault(); ub.classList.add('dragover'); });
-  ub.addEventListener('dragleave', ()  => ub.classList.remove('dragover'));
+  ub.addEventListener('dragleave', () => ub.classList.remove('dragover'));
   ub.addEventListener('drop', e => {
     e.preventDefault(); ub.classList.remove('dragover');
     const f = e.dataTransfer.files[0];

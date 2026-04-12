@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: dauthverse-ai
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: AUTH0_DOMAIN
+        sync: false
+      - key: AUTH0_CLIENT_ID
+        sync: false
+      - key: AUTH0_CLIENT_SECRET
+        sync: false
+      - key: AUTH0_CALLBACK_URL
+        sync: false
+      - key: AUTH0_LOGOUT_URL
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: FLASK_SECRET_KEY
+        sync: false
+      - key: RENDER
+        value: true
