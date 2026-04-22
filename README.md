@@ -18,7 +18,6 @@ And provides:
 🤖 AI-based mentoring
 🎯 Problem
 
-
 Students often don’t know:
 
 What skills they have
