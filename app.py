@@ -22,15 +22,16 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# ── NVIDIA NIM client ─────────────────────────────────────────────────────────
+# ── NVIDIA NIM client
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
+GITHUB_TOKEN   = os.getenv("GITHUB_TOKEN")  # ✅ FIXED: load GitHub token
 
 client = OpenAI(
     api_key=NVIDIA_API_KEY,
     base_url="https://integrate.api.nvidia.com/v1"
 )
 
-# ── Auth0 ─────────────────────────────────────────────────────────────────────
+# ── Auth0
 oauth = OAuth(app)
 oauth.register(
     name="auth0",
@@ -40,7 +41,7 @@ oauth.register(
     client_kwargs={"scope": "openid profile email"}
 )
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+# ── Routes
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -87,7 +88,7 @@ def logout():
 def api_data():
     return jsonify({"name": "DHAMODHARAN A", "project": "AI Career Copilot"})
 
-# ── AI helper ─────────────────────────────────────────────────────────────────
+# ── AI helper
 def get_ai_reply(user_message, resume_skills, github_skills):
     """Call NVIDIA NIM and return a plain string reply."""
 
@@ -137,7 +138,7 @@ Instructions:
     return response.choices[0].message.content
 
 
-# ── /ai-chat endpoint ─────────────────────────────────────────────────────────
+# ── /ai-chat endpoint
 @app.route("/ai-chat", methods=["POST"])
 def ai_chat_route():
     try:
@@ -161,7 +162,7 @@ def ai_chat_route():
         }), 500
 
 
-# ── Resume upload ─────────────────────────────────────────────────────────────
+# ── Resume upload
 @app.route("/upload", methods=["POST"])
 def upload_resume():
     try:
@@ -194,7 +195,7 @@ def upload_resume():
         return jsonify({"message": "Upload failed", "error": str(e)}), 500
 
 
-# ── GitHub analysis ───────────────────────────────────────────────────────────
+# ── GitHub analysis
 @app.route("/github-analysis", methods=["POST"])
 def github_analysis():
     try:
@@ -204,7 +205,10 @@ def github_analysis():
 
         response = requests.get(
             f"https://api.github.com/users/{username}/repos",
-            headers={"Accept": "application/vnd.github.v3+json"},
+            headers={
+                "Accept": "application/vnd.github.v3+json",
+                "Authorization": f"Bearer {GITHUB_TOKEN}"  # ✅ FIXED: token added
+            },
             timeout=10
         )
         if response.status_code != 200:
