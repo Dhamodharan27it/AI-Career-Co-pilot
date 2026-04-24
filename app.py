@@ -1,4 +1,6 @@
 import os
+import json
+import re
 import requests
 import pdfplumber
 from flask import Flask, redirect, session, jsonify, render_template, request
@@ -156,13 +158,12 @@ def ai_chat_route():
 
     except Exception as e:
         print(f"[AI CHAT ERROR] {type(e).__name__}: {e}")
-        # Return a real error message so the frontend shows it — not the placeholder
         return jsonify({
             "reply": f"⚠️ AI error: {str(e)}\n\nCheck that NVIDIA_API_KEY is set correctly on Render."
         }), 500
 
 
-# ── Resume upload
+# ── Resume upload 
 @app.route("/upload", methods=["POST"])
 def upload_resume():
     try:
@@ -171,6 +172,7 @@ def upload_resume():
         path     = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(path)
 
+        # Extract text from PDF
         text = ""
         with pdfplumber.open(path) as pdf:
             for page in pdf.pages:
@@ -178,17 +180,56 @@ def upload_resume():
                 if extracted:
                     text += extracted
 
-        text_lower = text.lower()
-        keywords   = [
-            "python", "java", "machine learning", "deep learning",
-            "html", "css", "javascript", "typescript",
-            "sql", "react", "flask", "django", "fastapi",
-            "docker", "kubernetes", "aws", "git", "linux",
-            "tensorflow", "pytorch", "pandas", "numpy"
-        ]
-        resume_skills = [s.capitalize() for s in keywords if s in text_lower]
+        if not text.strip():
+            return jsonify({"message": "Could not read PDF", "skills": []}), 400
+
+       
+        prompt = f"""You are a resume parser. Extract ALL technical skills, programming languages,
+frameworks, tools, and technologies from this resume text.
+
+Resume Text:
+{text[:3000]}
+
+Rules:
+- Return ONLY a JSON array of skills
+- Include programming languages, frameworks, tools, databases, cloud platforms
+- Capitalize properly (e.g. "Python", "Machine Learning", "React.js")
+- Do not include soft skills like "communication" or "teamwork"
+- Do not include any explanation, just the JSON array
+
+Example output:
+["Python", "Machine Learning", "Flask", "React", "MySQL", "AWS", "Docker"]
+"""
+
+        ai_response = client.chat.completions.create(
+            model="meta/llama-3.1-8b-instruct",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.1,
+            max_tokens=300
+        )
+
+        raw = ai_response.choices[0].message.content.strip()
+
+        # Safely parse the JSON array from AI response
+        match = re.search(r'\[.*?\]', raw, re.DOTALL)
+        if match:
+            resume_skills = json.loads(match.group())
+        else:
+            # Fallback to keyword matching if AI fails
+            keywords = [
+                "python", "java", "machine learning", "deep learning",
+                "html", "css", "javascript", "typescript",
+                "sql", "react", "flask", "django", "fastapi",
+                "docker", "kubernetes", "aws", "git", "linux",
+                "tensorflow", "pytorch", "pandas", "numpy"
+            ]
+            resume_skills = [s.capitalize() for s in keywords if s in text.lower()]
+
         session["resume_skills"] = resume_skills
-        return jsonify({"message": "Resume uploaded successfully", "skills": resume_skills})
+        return jsonify({
+            "message": "Resume uploaded and analyzed successfully! 🎉",
+            "skills": resume_skills
+        })
 
     except Exception as e:
         print(f"[UPLOAD ERROR] {e}")
